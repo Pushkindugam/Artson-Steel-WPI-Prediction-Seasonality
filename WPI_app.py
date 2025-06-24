@@ -2,66 +2,93 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import xgboost as xgb
+from sklearn.preprocessing import StandardScaler
+import numpy as np
 
-# Load Excel file from current directory (no "data/" folder)
-try:
-    df = pd.read_excel("WPI_Master-dataset.xlsx", sheet_name="Sheet1", parse_dates=["Date"])
-except FileNotFoundError:
-    st.error("❌ Could not find 'WPI_Master-dataset.xlsx' in the repo. Please upload it.")
-    st.stop()
+# Load data
+df = pd.read_excel("WPI_Master-dataset.xlsx", sheet_name="Sheet1", parse_dates=["Date"])
+df = df.rename(columns={"Date": "date"})
+df.set_index("date", inplace=True)
 
-st.set_page_config(page_title="WPI Steel Forecasting", layout="wide")
-st.title("🛠️ Steel WPI Forecasting & Seasonality Dashboard")
+st.set_page_config(page_title="Steel WPI Dashboard", layout="wide")
+st.title("📊 Steel WPI Analysis Dashboard")
 
-st.markdown("""
-Explore seasonal trends, correlations, and predictions of **Wholesale Price Index (WPI)** for steel (stainless, mild flat, mild long) and related indicators.
-""")
+tab1, tab2, tab3 = st.tabs(["📈 Seasonal Analysis", "📊 Correlation", "🔮 Forecasting"])
 
-# Tabs
-tab1, tab2, tab3 = st.tabs(["📈 Seasonality", "📊 Correlation", "🔮 Forecasting"])
-
-# --- Seasonality Tab ---
+# --- Tab 1: Seasonal ---
 with tab1:
-    st.header("📈 Seasonal Trends")
+    st.header("📈 Seasonal Analysis")
 
-    steel_col = st.selectbox("Select WPI Category", 
-                             ["WPI (stainless)", "WPI (mild flat)", "WPI (mild long)"])
+    selected_series = st.selectbox("Select Series", 
+                                   ["WPI (stainless)", "WPI (mild flat)", "WPI (mild long)"])
+    
+    data = df[selected_series].dropna().resample("M").mean()
+    trend = data.rolling(12, center=True).mean()
+    seasonality = data - trend
 
-    df_season = df[["Date", steel_col]].dropna()
-    df_season.set_index("Date", inplace=True)
-    df_monthly = df_season.resample("M").mean()
-    df_monthly["Trend"] = df_monthly[steel_col].rolling(12, center=True).mean()
-    df_monthly["Seasonality"] = df_monthly[steel_col] - df_monthly["Trend"]
+    st.subheader("WPI with Trend")
+    fig1, ax1 = plt.subplots()
+    ax1.plot(data, label='WPI')
+    ax1.plot(trend, label='Trend')
+    ax1.legend()
+    st.pyplot(fig1)
 
-    st.subheader("📊 WPI with Trend Line")
-    st.line_chart(df_monthly[[steel_col, "Trend"]])
+    st.subheader("Seasonality Component")
+    fig2, ax2 = plt.subplots()
+    ax2.plot(seasonality, color='green')
+    ax2.set_title("Seasonality = WPI - Trend")
+    st.pyplot(fig2)
 
-    st.subheader("📊 Seasonality Component")
-    st.line_chart(df_monthly["Seasonality"])
-
-# --- Correlation Tab ---
+# --- Tab 2: Correlation ---
 with tab2:
-    st.header("📊 Correlation Heatmap")
-    st.markdown("Visualize correlations between steel WPI and other economic indicators.")
+    st.header("📊 Correlation Matrix")
 
-    df_corr = df.drop(columns=["Date"]).corr()
-    fig, ax = plt.subplots(figsize=(12, 8))
-    sns.heatmap(df_corr, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
-    st.pyplot(fig)
+    numeric_df = df.select_dtypes(include=[np.number]).dropna()
+    corr = numeric_df.corr()
 
-# --- Forecasting Tab ---
+    fig3, ax3 = plt.subplots(figsize=(12, 8))
+    sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f", ax=ax3)
+    st.pyplot(fig3)
+
+# --- Tab 3: Forecasting ---
 with tab3:
-    st.header("🔮 Forecasting Output")
-    st.markdown("View past trends and model-ready inputs. Predictions can be added later.")
+    st.header("🔮 Forecasting Steel WPI using XGBoost")
 
-    plot_cols = ["WPI (stainless)", "WPI (mild flat)", "WPI (mild long)"]
-    forecast_df = df[["Date"] + plot_cols].dropna()
-    forecast_df.set_index("Date", inplace=True)
+    target_col = st.selectbox("Target WPI", 
+                              ["WPI (stainless)", "WPI (mild flat)", "WPI (mild long)"])
 
-    st.line_chart(forecast_df)
+    forecast_df = df[[target_col, "WPI (Coking Coal)", "WPI (Iron Ore)", "WPI (Crude Petroleum)", 
+                      "Avg. USD/INR", "Inflation Rate", "Steel Production"]].dropna().copy()
 
-    st.info("📘 Advanced forecasting logic is available in your notebook: `Final_WPI_Steel_Forecasting.ipynb`")
+    for lag in range(1, 4):
+        forecast_df[f"{target_col}_lag{lag}"] = forecast_df[target_col].shift(lag)
+    forecast_df.dropna(inplace=True)
 
-# Footer
-st.markdown("---")
-st.caption("Developed by Pushkin Dugam | IIT Jodhpur © 2025")
+    X = forecast_df.drop(columns=[target_col])
+    y = forecast_df[target_col]
+
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    model = xgb.XGBRegressor(n_estimators=100, random_state=42)
+    model.fit(X_scaled, y)
+    y_pred = model.predict(X_scaled)
+
+    st.subheader("Actual vs Predicted WPI")
+    fig4, ax4 = plt.subplots()
+    ax4.plot(y.values, label="Actual")
+    ax4.plot(y_pred, label="Predicted", color='red')
+    ax4.set_title(f"{target_col} – Actual vs Predicted")
+    ax4.legend()
+    st.pyplot(fig4)
+
+    st.subheader("🔍 Feature Importance")
+    importance = model.feature_importances_
+    imp_df = pd.DataFrame({"Feature": X.columns, "Importance": importance}).sort_values("Importance", ascending=False)
+
+    fig5, ax5 = plt.subplots()
+    sns.barplot(data=imp_df, x="Importance", y="Feature", ax=ax5)
+    st.pyplot(fig5)
+
+    st.info("Model: XGBoost with lag features and macroeconomic indicators")
