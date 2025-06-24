@@ -3,14 +3,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load data
-df = pd.read_excel("data/WPI_Master-dataset.xlsx", sheet_name="Sheet1", parse_dates=["Date"])
+# Load Excel file from current directory (no "data/" folder)
+try:
+    df = pd.read_excel("WPI_Master-dataset.xlsx", sheet_name="Sheet1", parse_dates=["Date"])
+except FileNotFoundError:
+    st.error("❌ Could not find 'WPI_Master-dataset.xlsx' in the repo. Please upload it.")
+    st.stop()
 
-st.set_page_config(page_title="WPI Steel Forecasting Dashboard", layout="wide")
-st.title("🛠️ Artson WPI Steel Analysis Dashboard")
+st.set_page_config(page_title="WPI Steel Forecasting", layout="wide")
+st.title("🛠️ Steel WPI Forecasting & Seasonality Dashboard")
 
 st.markdown("""
-Analyze **Wholesale Price Index (WPI)** trends, correlations, and forecasts for steel products and related indicators.
+Explore seasonal trends, correlations, and predictions of **Wholesale Price Index (WPI)** for steel (stainless, mild flat, mild long) and related indicators.
 """)
 
 # Tabs
@@ -29,13 +33,16 @@ with tab1:
     df_monthly["Trend"] = df_monthly[steel_col].rolling(12, center=True).mean()
     df_monthly["Seasonality"] = df_monthly[steel_col] - df_monthly["Trend"]
 
+    st.subheader("📊 WPI with Trend Line")
     st.line_chart(df_monthly[[steel_col, "Trend"]])
+
+    st.subheader("📊 Seasonality Component")
     st.line_chart(df_monthly["Seasonality"])
 
 # --- Correlation Tab ---
 with tab2:
     st.header("📊 Correlation Heatmap")
-    st.markdown("Understand how steel prices relate to other economic factors.")
+    st.markdown("Visualize correlations between steel WPI and other economic indicators.")
 
     df_corr = df.drop(columns=["Date"]).corr()
     fig, ax = plt.subplots(figsize=(12, 8))
@@ -44,8 +51,8 @@ with tab2:
 
 # --- Forecasting Tab ---
 with tab3:
-    st.header("🔮 WPI Forecasting Results")
-    st.markdown("See past trends and projected values for key steel categories.")
+    st.header("🔮 Forecasting Output")
+    st.markdown("View past trends and model-ready inputs. Predictions can be added later.")
 
     plot_cols = ["WPI (stainless)", "WPI (mild flat)", "WPI (mild long)"]
     forecast_df = df[["Date"] + plot_cols].dropna()
@@ -53,7 +60,8 @@ with tab3:
 
     st.line_chart(forecast_df)
 
-    st.markdown("📘 Detailed model output is available in the Jupyter notebook `Final_WPI_Steel_Forecasting.ipynb`.")
+    st.info("📘 Advanced forecasting logic is available in your notebook: `Final_WPI_Steel_Forecasting.ipynb`")
 
+# Footer
 st.markdown("---")
-st.caption("Created by Pushkin Dugam | IIT Jodhpur © 2025")
+st.caption("Developed by Pushkin Dugam | IIT Jodhpur © 2025")
