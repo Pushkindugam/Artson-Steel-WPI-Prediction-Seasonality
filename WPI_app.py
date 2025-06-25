@@ -64,4 +64,3 @@ elif page == "📑 Data Tables":
     else:
         st.error("Excel file not found: WPI_Steel_jan2022_to_may2026.xlsx")
 
-
