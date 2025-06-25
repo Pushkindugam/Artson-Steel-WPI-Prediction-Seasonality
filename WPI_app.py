@@ -77,6 +77,3 @@ elif page == "📈 Charts & Trend":
     else:
         st.error("Excel file not found for chart.")
 
-        st.line_chart(df.set_index("Date")["WPI"])
-    else:
-        st.warning("Required columns 'Date' and 'WPI' not found in the dataset.")
