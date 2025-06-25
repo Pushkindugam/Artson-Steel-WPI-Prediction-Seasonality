@@ -8,7 +8,7 @@ st.set_page_config(layout="wide", page_title="WPI Steel Analysis")
 st.title("📊 WPI Steel Forecasting Dashboard")
 
 # Sidebar Navigation
-page = st.sidebar.radio("Navigate", ["📘 PDF Reports", "📑 Data Tables", "📈 Charts & Trend"])
+page = st.sidebar.radio("Navigate", ["📘 PDF Reports", "📑 Data Tables"])
 
 # Helper to load Excel file
 def load_excel(file_path):
