@@ -1,3 +1,22 @@
+
+# Updated PDF Viewer Section (Edge-safe)
+import os
+
+if page == "📘 PDF Reports":
+    st.header("📘 Final Results [WPI Prediction Of Steel]")
+    with open("Final Results [WPI Prediction Of Steel].pdf", "rb") as f:
+        st.download_button("📥 Download Final Results PDF", f, file_name="Final_Results_WPI.pdf")
+
+    st.header("📘 Correlation_WPI Steel")
+    with open("Correlation_WPI Steel.pdf", "rb") as f:
+        st.download_button("📥 Download Correlation PDF", f, file_name="Correlation_WPI.pdf")
+
+    st.header("📘 Seasonal Pattern Of Steel")
+    with open("Seasonal Pattern Of Steel.pdf", "rb") as f:
+        st.download_button("📥 Download Seasonal Pattern PDF", f, file_name="Seasonal_Pattern_WPI.pdf")
+
+
+
 import streamlit as st
 import pandas as pd
 import base64
