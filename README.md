@@ -2,7 +2,7 @@
 
 This Streamlit app provides an interactive interface to analyze and forecast **Wholesale Price Index (WPI)** data for steel products in India. It allows users to download detailed reports, view structured datasets, and explore the underlying data behind the prediction results.
 
-🌐 **Live App**: [https://pushkindugam-wpi-steel-forecasting.streamlit.app](https://pushkindugam-wpi-steel-forecasting.streamlit.app)
+🌐 **Live App**: [[https://pushkindugam-wpi-steel-forecasting.streamlit.app](https://pushkindugam-wpi-steel-forecasting.streamlit.app)](https://wpiapppy-2jt5zbwrjhis3jd3hht6zz.streamlit.app/)
 
 ---
 
