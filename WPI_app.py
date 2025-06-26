@@ -25,25 +25,8 @@ tabs = st.tabs(["Correlation", "Forecasting", "Seasonality", "MA/WMA/EMA"])
 
 # ---- Tab 1: Correlation ---- #
 with tabs[0]:
-    if master_file:
-        df_master = pd.read_excel(master_file)
-        df_master['Date'] = pd.to_datetime(df_master['Date'])
-        df_master.set_index('Date', inplace=True)
-
-        st.subheader("\U0001F4C1 Raw WPI Dataset Preview")
-        st.dataframe(df_master.head())
-
-        st.subheader("\U0001F4CC Correlation Matrix")
-        corr = df_master.corr(numeric_only=True)
-        fig_corr, ax_corr = plt.subplots(figsize=(16, 10))
-        sns.heatmap(corr, annot=True, cmap='coolwarm', fmt='.2f', ax=ax_corr)
-        st.pyplot(fig_corr)
-
-        for target in ['WPI (stainless)', 'WPI (mild flat)', 'WPI (mild long)']:
-            if target in corr.columns:
-                st.markdown(f"**Top correlations with {target}:**")
-                sorted_corr = corr[target].drop(target).sort_values(key=abs, ascending=False)
-                st.code(sorted_corr.head(5).round(3).to_string())
+    st.subheader("\U0001F4C8 WPI Steel Correlation Matrix")
+    st.image("https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Correlation_Screenshot.png", use_column_width=True)
 
 # ---- Tab 2: Forecasting ---- #
 with tabs[1]:
