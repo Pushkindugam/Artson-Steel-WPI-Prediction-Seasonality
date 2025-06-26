@@ -26,7 +26,7 @@ tabs = st.tabs(["Correlation", "Forecasting", "Seasonality", "MA/WMA/EMA"])
 # ---- Tab 1: Correlation ---- #
 with tabs[0]:
     st.subheader("\U0001F4C8 WPI Steel Correlation Matrix")
-    st.image("https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Correlation_Screenshot.png", use_column_width=True)
+    st.image("https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Correlation_Screenshot.png", use_container_width=True)
 
 # ---- Tab 2: Forecasting ---- #
 with tabs[1]:
