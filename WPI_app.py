@@ -12,9 +12,11 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
     st.markdown("*by **Pushkin Dugam***")
-    st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Correlation_Screenshot.png",
-             use_container_width=True,
-             caption="Artson Engineering Ltd.")
+    st.image(
+        "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Correlation_Screenshot.png",
+        use_container_width=True,
+        caption="Artson Engineering Ltd."
+    )
 
 # ---------- Header ----------
 st.markdown(
@@ -27,7 +29,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---------- Screenshot URLs from GitHub ----------
+# ---------- Screenshot URLs ----------
 img_urls = {
     "Prediction": "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Prediction_screenshot.png",
     "Seasonality": "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Seasonality_screenshot.png",
@@ -37,7 +39,6 @@ img_urls = {
 # ---------- Tabs ----------
 tabs = st.tabs(["🔮 Prediction", "📈 Seasonality", "🔗 Correlation"])
 
-# Helper function to center content using columns
 def centered_image(img_url, caption):
     left, center, right = st.columns([1, 2, 1])
     with center:
@@ -60,4 +61,11 @@ with tabs[2]:
 
 # ---------- Footer ----------
 st.markdown("---")
-st.markdown("<center>© 2025 Artson Ltd | Built with ❤️ by Pushkin Dugam</center>", unsafe_allow_html=True)
+st.markdown(
+    """
+    <div style="text-align: center;">
+        View the full project on <a href="https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality" target="_blank">GitHub</a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
