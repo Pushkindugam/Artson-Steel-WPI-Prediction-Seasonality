@@ -47,10 +47,12 @@ tabs = st.tabs(["📈 Prediction", "📆 Seasonality", "📊 Correlation", "📂
 # ---- Tab 1: Prediction ---- #
 with tabs[0]:
     st.header("📈 Forecasting Steel WPI (2022–2026)")
+    
     st.markdown("""
-    Steel price forecasting helps predict future trends in WPI, enabling better planning of procurement budgets and contracts.
-
-    These graphs show projected values of WPI for stainless, mild flat, and mild long steel categories from **May 2025 to May 2026**, along with trend analysis of earlier dates.
+    These forecasts predict the **Wholesale Price Index (WPI)** trends for  
+    Stainless, Mild Flat, and Mild Long Steel categories.  
+    They assist EPC procurement teams in **estimating future steel prices** to make  
+    cost-effective decisions for long-term projects.
     """)
 
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Prediction_screenshot.png", use_container_width=True)
@@ -71,37 +73,39 @@ with tabs[0]:
 # ---- Tab 2: Seasonality ---- #
 with tabs[1]:
     st.header("📆 Seasonal Patterns of Steel Prices")
-    st.markdown("""
-    Seasonality analysis reveals repeating patterns in steel prices across months or years.
 
-    Understanding seasonal trends helps procurement teams schedule bulk purchases in **low-price months**, avoiding cost spikes during **peak demand seasons**.
-    """)
+    st.markdown("""
+    The STL (Seasonal-Trend Decomposition using Loess) method typically shows  
+    recurring seasonal behavior. This section has been simplified to keep the app focused.  
+    """)  # STL decomposition removed as per your request
 
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Seasonality_screenshot.png", use_container_width=True)
-
 
 # ---- Tab 3: Correlation ---- #
 with tabs[2]:
     st.header("📊 Correlation of WPI Categories")
-    st.markdown("""
-    Correlation analysis shows how steel WPI is influenced by other economic and industrial indicators.
 
-    This helps identify key **cost drivers** and supports **data-driven procurement decisions** for project planning and material sourcing.
-    """)
+    st.markdown("""
+    This section helps explore interdependencies between WPI categories  
+    and other macro indicators. The heatmap and matrix are currently not displayed.
+    """)  # Correlation chart + matrix removed as per your request
 
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Correlation_Screenshot.png", use_container_width=True)
-
 
 # ---- Tab 4: Dataset ---- #
 with tabs[3]:
     st.header("📂 Master Dataset Overview")
-    st.markdown("""
-    This dataset contains **monthly data from January 2022 to April 2025**  
-    covering key economic and industry indicators that influence **steel WPI**.
 
-    📌 A total of **21 columns** have been curated from **authorized government sources**  
-    including commodity prices, economic indices, and input costs relevant to EPC projects.
+    st.markdown("""
+    This tab contains the **raw data** collected from government and market sources  
+    used for forecasting and correlation analysis.  
+    It includes 21 columns across 3+ years, covering commodity prices, fuel rates,  
+    construction costs, and WPI categories.
     """)
+
+    df_master = load_excel_from_github(master_url)
+    df_master['Date'] = pd.to_datetime(df_master['Date'])
+    df_master.set_index('Date', inplace=True)
 
     st.subheader("📋 WPI Master Dataset Preview")
     st.dataframe(df_master.head(20), use_container_width=True)
