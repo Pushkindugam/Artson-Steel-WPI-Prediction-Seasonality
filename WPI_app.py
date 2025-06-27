@@ -49,10 +49,11 @@ with tabs[0]:
     st.header("📈 Forecasting Steel WPI (2022–2026)")
     
     st.markdown("""
-    These forecasts predict the **Wholesale Price Index (WPI)** trends for  
-    Stainless, Mild Flat, and Mild Long Steel categories.  
-    They assist EPC procurement teams in **estimating future steel prices** to make  
-    cost-effective decisions for long-term projects.
+    Steel price forecasting helps predict future trends in WPI,  
+    enabling better planning of procurement budgets and contracts.  
+    
+    These graphs show projected values of WPI for stainless, mild flat, and mild long steel categories  
+    from **May 2025 to May 2026**, along with trend analysis of earlier dates.
     """)
 
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Prediction_screenshot.png", use_container_width=True)
@@ -75,9 +76,11 @@ with tabs[1]:
     st.header("📆 Seasonal Patterns of Steel Prices")
 
     st.markdown("""
-    The STL (Seasonal-Trend Decomposition using Loess) method typically shows  
-    recurring seasonal behavior. This section has been simplified to keep the app focused.  
-    """)  # STL decomposition removed as per your request
+    Seasonality analysis reveals repeating patterns in steel prices across months or years.  
+    
+    Understanding seasonal trends helps procurement teams schedule bulk purchases  
+    in **low-price months**, avoiding cost spikes during **peak demand seasons**.
+    """)
 
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Seasonality_screenshot.png", use_container_width=True)
 
@@ -86,9 +89,11 @@ with tabs[2]:
     st.header("📊 Correlation of WPI Categories")
 
     st.markdown("""
-    This section helps explore interdependencies between WPI categories  
-    and other macro indicators. The heatmap and matrix are currently not displayed.
-    """)  # Correlation chart + matrix removed as per your request
+    Correlation analysis shows how steel WPI is influenced by other economic and industrial indicators.  
+    
+    This helps identify key **cost drivers** and supports **data-driven procurement decisions**  
+    for project planning and material sourcing.
+    """)
 
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Correlation_Screenshot.png", use_container_width=True)
 
