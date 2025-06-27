@@ -79,22 +79,6 @@ with tabs[1]:
 
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Seasonality_screenshot.png", use_container_width=True)
 
-    steel_types = {
-        'WPI (stainless)': 'Stainless',
-        'WPI (mild flat)': 'Mild Flat',
-        'WPI (mild long)': 'Mild Long'
-    }
-
-    for col, label in steel_types.items():
-        st.subheader(f"🔁 STL Decomposition: {label}")
-        stl = STL(df_forecast[col], period=12).fit()
-        seasonal = stl.seasonal
-
-        fig_s, ax = plt.subplots(figsize=(10, 3))
-        ax.plot(seasonal, label='Seasonal Component')
-        ax.set_title(f"{label} Steel - Seasonal Pattern")
-        ax.legend()
-        st.pyplot(fig_s)
 
 # ---- Tab 3: Correlation ---- #
 with tabs[2]:
@@ -107,17 +91,6 @@ with tabs[2]:
 
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Correlation_Screenshot.png", use_container_width=True)
 
-    df_master = load_excel_from_github(master_url)
-    df_master['Date'] = pd.to_datetime(df_master['Date'])
-    df_master.set_index('Date', inplace=True)
-
-    corr = df_master.corr(numeric_only=True)
-    st.dataframe(corr.style.background_gradient(cmap='coolwarm').format("{:.2f}"))
-
-    fig_corr, ax = plt.subplots(figsize=(10, 5))
-    sns.heatmap(corr, annot=True, cmap='coolwarm', fmt='.2f', ax=ax)
-    ax.set_title("WPI Correlation Heatmap")
-    st.pyplot(fig_corr)
 
 # ---- Tab 4: Dataset ---- #
 with tabs[3]:
