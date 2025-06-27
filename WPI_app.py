@@ -1,71 +1,49 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="WPI Steel Forecast Dashboard",
-    layout="wide"
-)
+# Page setup
+st.set_page_config(page_title="Artson Ltd – WPI Steel Dashboard", layout="centered")
 
-# ---------- Sidebar ----------
+# Sidebar
 with st.sidebar:
-    st.markdown("## 📘 WPI Steel Guidelines")
-    st.markdown("Analysis of steel price indices for procurement decisions.")
-    st.markdown("---")
-    st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
-    st.markdown("*by **Pushkin Dugam***")
     st.image(
-        "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Correlation_Screenshot.png",
+        "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/artson_logo.png",
         use_container_width=True,
         caption="Artson Engineering Ltd."
     )
 
-# ---------- Header ----------
-st.markdown(
-    """
-    <div style="text-align: center; margin-top: -40px;">
-        <h1>Artson Ltd, A Tata Enterprise</h1>
-        <h3 style="color: gray;">WPI Steel Analysis with Forecasting</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+    st.markdown("## 📘 What is WPI?")
+    st.markdown("""
+    WPI stands for **Wholesale Price Index**.  
+    It tracks the price changes of goods at the **wholesale level**,  
+    useful for procurement and forecasting in industries like **steel**.
+    """)
 
-# ---------- Screenshot URLs ----------
+    st.markdown("---")
+    st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
+    st.markdown("[GitHub Repository](https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality)")
+
+# Main Title
+st.title("Artson Ltd – A Tata Enterprise")
+st.markdown("### 📈 WPI Steel Analysis & Forecasting Dashboard")
+
+# Image URLs
 img_urls = {
     "Prediction": "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Prediction_screenshot.png",
     "Seasonality": "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Seasonality_screenshot.png",
-    "Correlation": "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Correlation_Screenshot.png"
+    "Correlation": "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/artson_logo.png"
 }
 
-# ---------- Tabs ----------
-tabs = st.tabs(["🔮 Prediction", "📈 Seasonality", "🔗 Correlation"])
+# Tabs
+tabs = st.tabs(["Prediction", "Seasonality", "Correlation"])
 
-def centered_image(img_url, caption):
-    left, center, right = st.columns([1, 2, 1])
-    with center:
-        st.image(img_url, caption=caption, use_container_width=True)
-
-# Tab 1 – Prediction
 with tabs[0]:
-    st.subheader("🔮 Forecasting – WPI Steel (2022–2026)")
-    centered_image(img_urls["Prediction"], "WPI Forecast using STL & Trend Extension")
+    st.subheader("📈 Forecasting WPI for Steel (2022–2026)")
+    st.image(img_urls["Prediction"], use_container_width=True)
 
-# Tab 2 – Seasonality
 with tabs[1]:
-    st.subheader("📈 Seasonal Patterns – STL Decomposition")
-    centered_image(img_urls["Seasonality"], "Seasonal Patterns in Stainless, Mild Flat & Long Steel")
+    st.subheader("📊 Seasonal Pattern of Steel Prices")
+    st.image(img_urls["Seasonality"], use_container_width=True)
 
-# Tab 3 – Correlation
 with tabs[2]:
-    st.subheader("🔗 WPI Steel Correlation Heatmap")
-    centered_image(img_urls["Correlation"], "Correlation Matrix Across Steel Categories")
-
-# ---------- Footer ----------
-st.markdown("---")
-st.markdown(
-    """
-    <div style="text-align: center;">
-        View the full project on <a href="https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality" target="_blank">GitHub</a>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+    st.subheader("📌 Correlation Matrix of WPI Indicators")
+    st.image(img_urls["Correlation"], use_container_width=True)
