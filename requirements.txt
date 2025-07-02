@@ -1,11 +1,16 @@
+
 streamlit
 pandas
-scikit-learn
 matplotlib
 seaborn
 statsmodels
+scikit-learn
+numpy
 requests
-openpyxl
+openai
+beautifulsoup4
+lxml
+
 
 
 
