@@ -188,34 +188,35 @@ with tabs[5]:
 
     if user_question:
         with st.spinner("Thinking..."):
-            import openai  # ensure imported here or at top
-            api_key = st.secrets.get("openai_api_key", "")
+            try:
+                import openai
+                from openai import OpenAI
 
-            if not api_key:
-                st.error("OpenAI API key is missing. Add it in Streamlit secrets to use the chatbot.")
-            else:
-                context_summary = f"Current Steel Price (Mumbai): {get_steel_price()}\n"
-                context_summary += (
-                    "This dashboard uses a hybrid forecasting model combining XGBoost and SARIMA "
-                    "based on economic indicators such as crude steel production, PMI, exchange rate (USD/INR), "
-                    "and commodity prices. It analyzes historical trends and projects steel WPI values."
-                )
+                api_key = st.secrets.get("openai_api_key", "")
+                if not api_key:
+                    st.error("OpenAI API key is missing. Add it in Streamlit secrets to use the chatbot.")
+                else:
+                    client = OpenAI(api_key=api_key)
 
-                try:
-                    client = openai.OpenAI(api_key=api_key)
+                    context_summary = f"Current Steel Price (Mumbai): {get_steel_price()}\n"
+                    context_summary += (
+                        "This dashboard uses a hybrid forecasting model combining XGBoost and SARIMA, "
+                        "based on indicators like crude steel production, PMI, inflation, and INR/USD exchange rate."
+                    )
 
                     response = client.chat.completions.create(
                         model="gpt-3.5-turbo",
                         messages=[
                             {"role": "system", "content": context_summary},
-                            {"role": "user", "content": user_question},
+                            {"role": "user", "content": user_question}
                         ]
                     )
 
                     st.success(response.choices[0].message.content)
 
-                except Exception as e:
-                    st.error(f"OpenAI API error: {e}")
+            except Exception as e:
+                st.error(f"OpenAI API error: {e}")
+
 
 
 
