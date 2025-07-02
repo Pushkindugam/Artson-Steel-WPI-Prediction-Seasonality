@@ -5,6 +5,7 @@ matplotlib
 seaborn
 statsmodels
 requests
+openpyxl
 
 
 
