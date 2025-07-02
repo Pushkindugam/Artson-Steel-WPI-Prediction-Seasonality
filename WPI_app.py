@@ -41,7 +41,7 @@ master_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Season
 forecast_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Steel_jan2022_to_may2026.xlsx"
 
 # ---------------- Tabs ---------------- #
-tabs = st.tabs(["\ud83d\udcc8 Prediction", "\ud83d\udcc6 Seasonality", "\ud83d\udcca Correlation", "\ud83d\udcc2 Dataset", "🤖 ML Model"])
+tabs = st.tabs(["📈 Prediction", "📆 Seasonality", "📊 Correlation", "📂 Dataset", "🤖 ML Model", "🧠 Chatbot"])
 
 # ---- Tab 1: Prediction ---- #
 with tabs[0]:
