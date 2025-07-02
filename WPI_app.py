@@ -29,7 +29,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
     st.markdown("*by **Pushkin Dugam***")
-    st.markdown("[\ud83d\udd17 GitHub Repository](https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality)")
+    st.markdown("[🔗 GitHub Repository](https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality)")
 
 # ---------------- Load Data ---------------- #
 @st.cache_data
