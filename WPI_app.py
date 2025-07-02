@@ -188,24 +188,35 @@ with tabs[5]:
 
     if user_question:
         with st.spinner("Thinking..."):
-            openai.api_key = st.secrets.get("openai_api_key", "")
-            if not openai.api_key:
+            import openai  # ensure imported here or at top
+            api_key = st.secrets.get("openai_api_key", "")
+
+            if not api_key:
                 st.error("OpenAI API key is missing. Add it in Streamlit secrets to use the chatbot.")
             else:
                 context_summary = f"Current Steel Price (Mumbai): {get_steel_price()}\n"
-                context_summary += "This dashboard uses XGBoost + SARIMA forecasts based on economic indicators like crude steel, PMI, INR/USD, etc."
+                context_summary += (
+                    "This dashboard uses a hybrid forecasting model combining XGBoost and SARIMA "
+                    "based on economic indicators such as crude steel production, PMI, exchange rate (USD/INR), "
+                    "and commodity prices. It analyzes historical trends and projects steel WPI values."
+                )
 
                 try:
-                    response = openai.ChatCompletion.create(
+                    client = openai.OpenAI(api_key=api_key)
+
+                    response = client.chat.completions.create(
                         model="gpt-3.5-turbo",
                         messages=[
                             {"role": "system", "content": context_summary},
                             {"role": "user", "content": user_question},
                         ]
                     )
-                    st.success(response['choices'][0]['message']['content'])
+
+                    st.success(response.choices[0].message.content)
+
                 except Exception as e:
                     st.error(f"OpenAI API error: {e}")
+
 
 
 
