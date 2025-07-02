@@ -6,6 +6,7 @@ from statsmodels.tsa.seasonal import STL
 from sklearn.metrics import mean_squared_error
 import numpy as np
 import requests
+from io import BytesIO
 import openai
 from bs4 import BeautifulSoup
 
@@ -38,14 +39,17 @@ st.markdown("<h2 style='text-align: center;'>WPI Steel Analysis with Forecasting
 @st.cache_data
 def load_excel_from_github(url):
     response = requests.get(url)
-    return pd.read_excel(response.content)
+    return pd.read_excel(BytesIO(response.content))
 
 def get_steel_price(city="Mumbai"):
     url = "https://www.steelmint.com/market-intel/indian-market"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    price_data = soup.find('div', text=lambda x: x and city in x)
-    return price_data.text if price_data else "Price not found"
+    try:
+        response = requests.get(url, timeout=5)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        price_data = soup.find('div', text=lambda x: x and city in x)
+        return price_data.text.strip() if price_data else "Price not found"
+    except:
+        return "Error fetching price."
 
 master_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Master-dataset.xlsx"
 forecast_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Steel_jan2022_to_may2026.xlsx"
@@ -56,7 +60,6 @@ tabs = st.tabs(["📈 Prediction", "📆 Seasonality", "📊 Correlation", "📂
 # ---- Tab 1: Prediction ---- #
 with tabs[0]:
     st.header("📈 Forecasting Steel WPI (2022–2026)")
-
     st.markdown("""
     Steel price forecasting helps predict future trends in WPI,  
     enabling better planning of procurement budgets and contracts.  
@@ -83,33 +86,28 @@ with tabs[0]:
 # ---- Tab 2: Seasonality ---- #
 with tabs[1]:
     st.header("📆 Seasonal Patterns of Steel Prices")
-
     st.markdown("""
     Seasonality analysis reveals repeating patterns in steel prices across months or years.  
 
     Understanding seasonal trends helps procurement teams schedule bulk purchases  
     in **low-price months**, avoiding cost spikes during **peak demand seasons**.
     """)
-
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Seasonality_screenshot.png", use_container_width=True)
 
 # ---- Tab 3: Correlation ---- #
 with tabs[2]:
     st.header("📊 Correlation of WPI Categories")
-
     st.markdown("""
     Correlation analysis shows how steel WPI is influenced by other economic and industrial indicators.  
 
     This helps identify key **cost drivers** and supports **data-driven procurement decisions**  
     for project planning and material sourcing.
     """)
-
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Correlation_Screenshot.png", use_container_width=True)
 
 # ---- Tab 4: Dataset ---- #
 with tabs[3]:
     st.header("📂 Master Dataset Overview")
-
     st.markdown("""
     This tab contains the **raw data** collected from government and market sources  
     used for forecasting and correlation analysis.  
@@ -123,20 +121,14 @@ with tabs[3]:
 
     st.subheader("📋 WPI Master Dataset Preview")
     st.dataframe(df_master.head(20), use_container_width=True)
-
     st.markdown("🔗 [Download Full Excel Dataset](https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Master-dataset.xlsx)")
 
 # ---- Tab 5: ML Model ---- #
 with tabs[4]:
     st.header("🤖 ML Model")
-
     st.markdown("""
     To forecast the **Wholesale Price Index (WPI)** for stainless, mild flat, and mild long steel categories,  
     a combination of **machine learning** and **statistical time series modeling** was employed.
-
-    The final forecast is an average of two powerful approaches:  
-    - 🔸 **XGBoost Regressor** (gradient-boosted decision trees)  
-    - 🔸 **SARIMA** (Seasonal AutoRegressive Integrated Moving Average)
     """)
 
     st.subheader("📌 XGBoost Regressor")
@@ -187,7 +179,6 @@ with tabs[4]:
 # ---- Tab 6: Ask a Question ---- #
 with tabs[5]:
     st.header("💬 Ask a Question")
-
     st.markdown("""
     This tab allows you to interact with an AI chatbot trained on this dashboard.  
     You can ask about steel prices, WPI trends, or dataset features.
@@ -197,24 +188,24 @@ with tabs[5]:
 
     if user_question:
         with st.spinner("Thinking..."):
-            openai.api_key = st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else ""
-
+            openai.api_key = st.secrets.get("openai_api_key", "")
             if not openai.api_key:
                 st.error("OpenAI API key is missing. Add it in Streamlit secrets to use the chatbot.")
             else:
                 context_summary = f"Current Steel Price (Mumbai): {get_steel_price()}\n"
                 context_summary += "This dashboard uses XGBoost + SARIMA forecasts based on economic indicators like crude steel, PMI, INR/USD, etc."
 
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": context_summary},
-                        {"role": "user", "content": user_question},
-                    ]
-                )
-                st.success(response['choices'][0]['message']['content'])
-
-
+                try:
+                    response = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=[
+                            {"role": "system", "content": context_summary},
+                            {"role": "user", "content": user_question},
+                        ]
+                    )
+                    st.success(response['choices'][0]['message']['content'])
+                except Exception as e:
+                    st.error(f"OpenAI API error: {e}")
 
 
 
