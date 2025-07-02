@@ -1,13 +1,13 @@
-# import streamlit as st
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-# from statsmodels.tsa.seasonal import STL
-# from sklearn.metrics import mean_squared_error
-# import numpy as np
-# import requests
-# import openai
-# from bs4 import BeautifulSoup
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from statsmodels.tsa.seasonal import STL
+from sklearn.metrics import mean_squared_error
+import numpy as np
+import requests
+import openai
+from bs4 import BeautifulSoup
 
 # ---------------- Sidebar ---------------- #
 with st.sidebar:
