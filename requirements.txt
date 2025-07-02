@@ -1,15 +1,30 @@
+# Core libraries
 streamlit
 pandas
+numpy
 matplotlib
 seaborn
+
+# Time series + ML
 statsmodels
 scikit-learn
-numpy
+
+# File handling
+openpyxl
 requests
-openai
+
+# Web scraping
 beautifulsoup4
 lxml
-openpyxl
+
+# Chatbot and vector search
+langchain
+faiss-cpu
+sentence-transformers
+huggingface-hub
+
+
+
 
 
 
