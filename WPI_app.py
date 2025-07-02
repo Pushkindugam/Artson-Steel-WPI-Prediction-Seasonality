@@ -20,16 +20,16 @@ with st.sidebar:
         use_container_width=True,
         caption="Artson Engineering Ltd."
     )
-    st.markdown("## What is WPI?")
+    st.markdown("## 📘 What is WPI?")
     st.markdown("""
     WPI stands for **Wholesale Price Index**.  
     It tracks the price changes of goods at the **wholesale level**,  
     forecasting steel useful for procurement in **EPC industries**.
     """)
     st.markdown("---")
-    st.markdown("### Built by Artson SCM Team – 2025")
+    st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
     st.markdown("*by **Pushkin Dugam***")
-    st.markdown("[GitHub Repository](https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality)")
+    st.markdown("[🔗 GitHub Repository](https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality)")
 
 # ---------------- Load Data ---------------- #
 @st.cache_data
@@ -41,21 +41,14 @@ master_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Season
 forecast_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Steel_jan2022_to_may2026.xlsx"
 
 # ---------------- Tabs ---------------- #
-tabs = st.tabs([
-    "Prediction", 
-    "Seasonality", 
-    "Correlation", 
-    "Dataset", 
-    "ML Model", 
-    "Chatbot"
-])
+tabs = st.tabs(["📈 Prediction", "📆 Seasonality", "📊 Correlation", "📂 Dataset", "🤖 ML Model", "🧠 Chatbot"])
 
 # ---- Tab 1: Prediction ---- #
 with tabs[0]:
-    st.header("Forecasting Steel WPI (2022–2026)")
+    st.header("📈 Forecasting Steel WPI (2022–2026)")
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Prediction_screenshot.png", use_container_width=True)
     df_forecast = load_excel_from_github(forecast_url)
-    df_forecast['Date'] = pd.to_datetime(df_forecast['Date'], format='%b-%y')
+    df_forecast['Date'] = pd.to_datetime(df_forecast['Date'], format='%b-%y', errors='coerce')
     df_forecast.set_index('Date', inplace=True)
     fig, ax = plt.subplots(figsize=(10, 4))
     for col in ['WPI (stainless)', 'WPI (mild flat)', 'WPI (mild long)']:
@@ -68,27 +61,27 @@ with tabs[0]:
 
 # ---- Tab 2: Seasonality ---- #
 with tabs[1]:
-    st.header("Seasonal Patterns of Steel Prices")
+    st.header("📆 Seasonal Patterns of Steel Prices")
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Seasonality_screenshot.png", use_container_width=True)
 
 # ---- Tab 3: Correlation ---- #
 with tabs[2]:
-    st.header("Correlation of WPI Categories")
+    st.header("📊 Correlation of WPI Categories")
     st.image("https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Correlation_Screenshot.png", use_container_width=True)
 
 # ---- Tab 4: Dataset ---- #
 with tabs[3]:
-    st.header("Master Dataset Overview")
+    st.header("📂 Master Dataset Overview")
     df_master = load_excel_from_github(master_url)
-    df_master['Date'] = pd.to_datetime(df_master['Date'])
+    df_master['Date'] = pd.to_datetime(df_master['Date'], errors='coerce')
     df_master.set_index('Date', inplace=True)
-    st.subheader("WPI Master Dataset Preview")
+    st.subheader("📋 WPI Master Dataset Preview")
     st.dataframe(df_master.head(20), use_container_width=True)
-    st.markdown("[Download Full Excel Dataset](https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Master-dataset.xlsx)")
+    st.markdown("🔗 [Download Full Excel Dataset](https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Master-dataset.xlsx)")
 
 # ---- Tab 5: ML Model ---- #
 with tabs[4]:
-    st.header("ML Model Overview")
+    st.header("🤖 ML Model")
     st.markdown("""
     A hybrid of **XGBoost** and **SARIMA** is used to forecast WPI:
     - XGBoost captures economic indicators (e.g., inflation, imports, PMI)
@@ -97,19 +90,32 @@ with tabs[4]:
 
 # ---- Tab 6: Chatbot ---- #
 with tabs[5]:
-    st.header("Ask About WPI Trends, Forecasts & Steel Prices")
+    st.header("🧠 Ask About WPI Trends, Forecasts & Steel Prices")
 
     df = load_excel_from_github(forecast_url)
-    df['Date'] = pd.to_datetime(df['Date'])
+    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
     df.set_index('Date', inplace=True)
 
     seasonal_summary = "WPI dips in January due to low demand, fiscal tightening, and weather-related construction slowdown."
-    forecast_summary = f"""
-    Stainless WPI (latest): {df['WPI (stainless)'].iloc[-1]:.2f}  
-    Mild flat WPI: {df['WPI (mild flat)'].iloc[-1]:.2f}  
-    Mild long WPI: {df['WPI (mild long)'].iloc[-1]:.2f}  
-    Forecast Range: {df.index[0].strftime('%b %Y')} - {df.index[-1].strftime('%b %Y')}
-    """
+
+    if not df.empty and pd.notna(df.index[0]) and pd.notna(df.index[-1]):
+        forecast_range = f"Forecast Range: {df.index[0].strftime('%b %Y')} - {df.index[-1].strftime('%b %Y')}"
+    else:
+        forecast_range = "Forecast range unavailable due to missing date values."
+
+    try:
+        latest_stainless = df['WPI (stainless)'].dropna().iloc[-1]
+        latest_flat = df['WPI (mild flat)'].dropna().iloc[-1]
+        latest_long = df['WPI (mild long)'].dropna().iloc[-1]
+        forecast_summary = f"""
+        Stainless WPI (latest): {latest_stainless:.2f}  
+        Mild flat WPI: {latest_flat:.2f}  
+        Mild long WPI: {latest_long:.2f}  
+        {forecast_range}
+        """
+    except:
+        forecast_summary = "Forecast summary unavailable due to missing values."
+
     model_summary = "SARIMA order: (1,1,1)(0,1,1,12), XGBoost trained on economic indicators."
     correlation_summary = "Mild flat & stainless WPI are correlated. Influencers: cement, fuel, steel production."
 
@@ -140,8 +146,8 @@ with tabs[5]:
     ---
     """
 
-    st.subheader("Ask your question")
-    question = st.text_input("Try: 'Why is January the lowest?', 'What is SARIMA?'")
+    st.subheader("💬 Ask your question")
+    question = st.text_input("Try: 'Why is January lowest?', 'What is SARIMA?'")
 
     if question:
         with st.spinner("Thinking with GPT-4..."):
@@ -155,20 +161,10 @@ with tabs[5]:
                     temperature=0.3
                 )
                 answer = response['choices'][0]['message']['content']
-                st.success("GPT-4 Answer:")
+                st.success("📘 GPT-4 Answer:")
                 st.write(answer)
             except Exception as e:
                 st.error(f"Error: {str(e)}")
-
-
-
-
-
-
-
-
-
-
 
 
 
