@@ -9,12 +9,12 @@ import numpy as np
 import requests
 
 # LangChain imports for chatbot
-from langchain.vectorstores import FAISS
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import TextLoader
-from langchain.llms import HuggingFaceHub
-from langchain.chains import RetrievalQA
+# from langchain.vectorstores import FAISS
+# from langchain.embeddings import HuggingFaceEmbeddings
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
+# from langchain.document_loaders import TextLoader
+# from langchain.llms import HuggingFaceHub
+# from langchain.chains import RetrievalQA
 
 
 # --------- Sidebar --------- #
@@ -159,16 +159,48 @@ with tabs[4]:
 with tabs[5]:
     st.header("💬 Ask a Question")
     st.markdown("""
-    This tab allows you to interact with an AI chatbot trained on this dashboard.  
-    You can ask about steel prices, WPI trends, or dataset features.
+    This tab allows you to interact with an AI chatbot trained on the documents  
+    from the official GitHub repo of this dashboard.  
+    You can ask about steel prices, WPI trends, or the machine learning models used.
     """)
 
     user_question = st.text_input("Ask your question about steel WPI data:")
 
+    # --------- GitHub Document-Based Chatbot --------- #
+    import os
+    import git
+    from pathlib import Path
+    from langchain.vectorstores import FAISS
+    from langchain.embeddings import HuggingFaceEmbeddings
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+    from langchain.document_loaders import TextLoader
+    from langchain.llms import HuggingFaceHub
+    from langchain.chains import RetrievalQA
+
+    def clone_or_update_repo(repo_url="https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality", local_dir="artson_repo"):
+        if os.path.exists(local_dir):
+            try:
+                repo = git.Repo(local_dir)
+                repo.remotes.origin.pull()
+            except:
+                pass  # If already updated or shallow clone
+        else:
+            git.Repo.clone_from(repo_url, local_dir)
+        return local_dir
+
+    def load_repo_documents(local_dir):
+        documents = []
+        for file_path in Path(local_dir).rglob("*.[mt]xt"):  # Load .md and .txt
+            try:
+                loader = TextLoader(str(file_path), encoding='utf-8')
+                documents.extend(loader.load())
+            except Exception as e:
+                print(f"Skipping {file_path}: {e}")
+        return documents
+
     def vector_bot(question):
-        # Load and process document
-        loader = TextLoader("dashboard_docs.txt")
-        documents = loader.load()
+        repo_dir = clone_or_update_repo()
+        documents = load_repo_documents(repo_dir)
 
         splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
         docs = splitter.split_documents(documents)
