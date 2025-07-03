@@ -1,31 +1,25 @@
-# Core libraries
+# Core Dashboard + Visualization
 streamlit
 pandas
 numpy
 matplotlib
 seaborn
 
-# Time series + ML
+# Time Series Analysis
 statsmodels
+
+# Machine Learning
 scikit-learn
 xgboost
 
-# File handling
+# File Handling
 openpyxl
 requests
 
-# Web scraping
-beautifulsoup4
-lxml
+# Optional for plotting compatibility in some environments
+pyplot
 
-# Chatbot and vector search
-torch>=2.0
-langchain
-langchain-community>=0.0.24
-faiss-cpu==1.7.4
-sentence-transformers
-huggingface-hub
-gitpython
+
 
 
 
