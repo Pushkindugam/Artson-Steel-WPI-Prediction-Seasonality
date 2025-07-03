@@ -1,23 +1,13 @@
-# Core Dashboard + Visualization
-streamlit
-pandas
-numpy
-matplotlib
-seaborn
+streamlit>=1.32.0
+pandas>=2.2.0
+matplotlib>=3.8.0
+seaborn>=0.13.0
+statsmodels>=0.14.0
+scikit-learn>=1.4.0
+numpy>=1.26.0
+requests>=2.31.0
+openpyxl>=3.1.2
 
-# Time Series Analysis
-statsmodels
-
-# Machine Learning
-scikit-learn
-xgboost
-
-# File Handling
-openpyxl
-requests
-
-# Optional for plotting compatibility in some environments
-pyplot
 
 
 
