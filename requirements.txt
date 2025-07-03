@@ -8,7 +8,7 @@ seaborn
 # Time series + ML
 statsmodels
 scikit-learn
-xgboost  # You mentioned using it in ML model tab
+xgboost
 
 # File handling
 openpyxl
@@ -19,12 +19,14 @@ beautifulsoup4
 lxml
 
 # Chatbot and vector search
+torch>=2.0
 langchain
 langchain-community>=0.0.24
 faiss-cpu==1.7.4
 sentence-transformers
 huggingface-hub
-gitpython  # Needed for cloning GitHub repo in chatbot tab
+gitpython
+
 
 
 
