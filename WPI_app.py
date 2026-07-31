@@ -44,16 +44,21 @@ st.markdown("<h2 style='text-align: center;'>WPI Steel Analysis with Forecasting
 # forecast_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Steel_jan2022_to_may2026.xlsx"
 
 from io import BytesIO
+import requests
+import streamlit as st
+import pandas as pd
 
 @st.cache_data
 def load_excel_from_github(url):
     response = requests.get(url)
+
+    st.write("Status Code:", response.status_code)
+    st.write("Content Type:", response.headers.get("Content-Type"))
+    st.write("First 200 characters:")
+    st.text(response.text[:200])
+
     response.raise_for_status()
     return pd.read_excel(BytesIO(response.content))
-
-master_url = "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Master-dataset.xlsx"
-
-forecast_url = "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Steel_jan2022_to_may2026.xlsx"
 
 # ---------------- Tabs ---------------- #
 tabs = st.tabs(["📈 Prediction", "📆 Seasonality", "📊 Correlation", "📂 Dataset", "🤖 ML Model"])
