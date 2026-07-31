@@ -52,10 +52,10 @@ import pandas as pd
 def load_excel_from_github(url):
     response = requests.get(url)
 
-    st.write("Status Code:", response.status_code)
-    st.write("Content Type:", response.headers.get("Content-Type"))
-    st.write("First 200 characters:")
-    st.text(response.text[:200])
+    # st.write("Status Code:", response.status_code)
+    # st.write("Content Type:", response.headers.get("Content-Type"))
+    # st.write("First 200 characters:")
+    # st.text(response.text[:200])
 
     response.raise_for_status()
     return pd.read_excel(BytesIO(response.content))
