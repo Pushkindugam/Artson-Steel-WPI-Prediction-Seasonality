@@ -35,13 +35,25 @@ st.markdown("<h1 style='text-align: center;'>Artson Ltd, A Tata Enterprise</h1>"
 st.markdown("<h2 style='text-align: center;'>WPI Steel Analysis with Forecasting</h2>", unsafe_allow_html=True)
 
 # ---------------- Load Data ---------------- #
+# @st.cache_data
+# def load_excel_from_github(url):
+#     response = requests.get(url)
+#     return pd.read_excel(response.content)
+
+# master_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Master-dataset.xlsx"
+# forecast_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Steel_jan2022_to_may2026.xlsx"
+
+from io import BytesIO
+
 @st.cache_data
 def load_excel_from_github(url):
     response = requests.get(url)
-    return pd.read_excel(response.content)
+    response.raise_for_status()
+    return pd.read_excel(BytesIO(response.content))
 
-master_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Master-dataset.xlsx"
-forecast_url = "https://github.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/raw/main/WPI_Steel_jan2022_to_may2026.xlsx"
+master_url = "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Master-dataset.xlsx"
+
+forecast_url = "https://raw.githubusercontent.com/Pushkindugam/Artson-Steel-WPI-Prediction-Seasonality/main/WPI_Steel_jan2022_to_may2026.xlsx"
 
 # ---------------- Tabs ---------------- #
 tabs = st.tabs(["📈 Prediction", "📆 Seasonality", "📊 Correlation", "📂 Dataset", "🤖 ML Model"])
